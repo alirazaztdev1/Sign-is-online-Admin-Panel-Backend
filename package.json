@@ -1,0 +1,41 @@
+{
+  "name": "sign-is-online-admin-panel-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "seed": "node seed.js",
+    "seed:platforms": "node seed-platforms.js",
+    "seed:products": "node seed-products.js",
+    "seed:metrics": "node seed-metrics.js",
+    "seed:scripts": "node seed-scripts.js",
+    "seed:devices": "node seed-devices.js",
+    "seed:history": "node seed-history.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.1070.0",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.22.2",
+    "jsonwebtoken": "^9.0.3",
+    "mssql": "^12.5.5",
+    "multer": "^2.1.1",
+    "pg": "^8.21.0",
+    "uuid": "^14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/usamabuttdev/Sign-is-online-Admin-Panel-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/usamabuttdev/Sign-is-online-Admin-Panel-Backend/issues"
+  },
+  "homepage": "https://github.com/usamabuttdev/Sign-is-online-Admin-Panel-Backend#readme"
+}

@@ -1,0 +1,92 @@
+name: Build & Deploy Backend
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: backend-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: sign-in-backend
+    steps:
+      - name: Pull latest code
+        run: |
+          cd /home/ec2-user/Sign-is-online-Admin-Panel-Backend
+          git pull origin main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: /home/ec2-user/Sign-is-online-Admin-Panel-Backend
+        run: npm install
+
+      - name: Start backend via systemd-run
+        run: |
+          cd /home/ec2-user/Sign-is-online-Admin-Panel-Backend
+          NODE_BIN=$(which node)
+          sudo systemctl stop backend 2>/dev/null || true
+          sudo systemctl kill backend 2>/dev/null || true
+          sudo systemctl reset-failed backend 2>/dev/null || true
+          sudo systemd-run --unit=backend \
+            --working-directory=/home/ec2-user/Sign-is-online-Admin-Panel-Backend \
+            --setenv=PORT=5000 \
+            ${NODE_BIN} app.js
+
+      - name: Health check
+        run: |
+          sleep 5
+          curl --fail http://localhost:5000 || (sudo journalctl -u backend --no-pager -n 50 && exit 1)
+
+      - name: Diagnose admin API
+        run: |
+          echo "=== Admin API test ==="
+          curl -s -o /tmp/admin-test.json -w "HTTP_CODE:%{http_code}\nSIZE:%{size_download}\nCONTENT_TYPE:%{content_type}\n" \
+            -H "Authorization: Bearer 1234567890" \
+            "http://localhost:5000/admin/all-users?page=1&limit=10" || echo "CURL_EXIT_CODE:$?"
+          echo "=== First 500 bytes ==="
+          cat /tmp/admin-test.json | head -c 500
+          echo ""
+          echo "=== File type ==="
+          file /tmp/admin-test.json 2>/dev/null || echo "file command not available"
+          echo "=== Done ==="
+
+      - name: Diagnose without auth
+        run: |
+          echo "=== No-auth test ==="
+          curl -s -o /tmp/noauth-test.json -w "HTTP_CODE:%{http_code}\nSIZE:%{size_download}\n" \
+            "http://localhost:5000/admin/all-users?page=1&limit=10" || echo "CURL_EXIT_CODE:$?"
+          cat /tmp/noauth-test.json | head -c 500
+          echo ""
+
+      - name: Diagnose health endpoint
+        run: |
+          echo "=== Health test ==="
+          curl -s -o /tmp/health-test.txt -w "HTTP_CODE:%{http_code}\n" \
+            "http://localhost:5000/health"
+          cat /tmp/health-test.txt
+          echo ""
+
+      - name: Network diagnostics
+        run: |
+          echo "::notice::HOSTNAME=$(hostname)"
+          echo "::notice::PRIVATE_IP=$(hostname -I 2>/dev/null | awk '{print $1}')"
+          echo "::notice::PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo unknown)"
+          echo "::notice::BACKEND_PORT=$(ss -tlnp | grep 5000 || echo 'NOT_FOUND')"
+
+      - name: Upload diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-api-test-${{ github.run_id }}
+          path: |
+            /tmp/admin-test.json
+            /tmp/noauth-test.json
+            /tmp/health-test.txt
