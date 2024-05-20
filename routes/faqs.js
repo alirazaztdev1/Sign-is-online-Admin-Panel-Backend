@@ -28,7 +28,7 @@ router.get('/all', authenticateToken, async (req, res) => {
     let where = 'WHERE 1=1';
     const params = [];
     let idx = 1;
-    if (keyword) { where += ` AND (question ILIKE $${idx++} OR answer ILIKE $${idx++}`; params.push(`%${keyword}%`, `%${keyword}%`); }
+    if (keyword) { where += ` AND (question ILIKE ${idx++} OR answer ILIKE ${idx++})`; params.push(`%${keyword}%`, `%${keyword}%`); }
     if (isActive !== undefined && isActive !== '') { where += ` AND isactive = $${idx++}`; params.push(isActive === 'true'); }
     const countResult = await db.query(`SELECT COUNT(*) FROM faqs ${where}`, params);
     const result = await db.query(`SELECT * FROM faqs ${where} ORDER BY id DESC LIMIT $${idx} OFFSET $${idx+1}`, [...params, parseInt(limit), offset]);
