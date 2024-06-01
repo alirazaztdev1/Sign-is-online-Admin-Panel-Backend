@@ -1,7 +1,7 @@
 {
   "name": "sign-is-online-admin-panel-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Admin API for the Sign is Online dashboard",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
