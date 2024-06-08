@@ -51,7 +51,7 @@ app.use('/sales', require('./routes/sales'));
 app.use('/trainers', require('./routes/trainers'));
 
 app.get('/', (req, res) => {
-  res.send('Welcome to our boilerplate Expressjs server');
+  res.json({ success: true, message: 'Sign is Online admin API' });
 });
 
 app.get('/diagnostics', async (req, res) => {
