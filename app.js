@@ -81,7 +81,7 @@ app.get('/diagnostics', async (req, res) => {
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is healthy!' });
+  res.status(200).json({ status: 'OK', message: 'Server is healthy!', timestamp: new Date().toISOString() });
 });
 
 // 404 handler — return JSON instead of HTML
