@@ -107,7 +107,7 @@ async function start() {
     console.warn('MSSQL CONTENT schema init failed:', err.message);
   }
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT} (${process.env.NODE_ENV || 'development'})`);
   });
 }
 
