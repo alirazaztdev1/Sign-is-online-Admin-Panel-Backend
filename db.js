@@ -6,6 +6,7 @@ const pool = new Pool({
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'test111',
   database: process.env.DB_NAME || 'vibe_code_db',
+  max: 10,
 });
 
 pool.on('error', (err) => {
