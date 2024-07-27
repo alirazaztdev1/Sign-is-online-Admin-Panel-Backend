@@ -34,7 +34,9 @@ router.post('/login', async (req, res) => {
 
 router.post('/signup', async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const name = req.body.name;
+    const email = (req.body.email || '').trim().toLowerCase();
+    const password = req.body.password;
     if (!email || !password) return res.status(400).json({ success: false, message: 'Email and password required' });
     const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) return res.status(409).json({ success: false, message: 'User already exists' });
