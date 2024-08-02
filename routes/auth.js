@@ -38,6 +38,7 @@ router.post('/signup', async (req, res) => {
     const email = (req.body.email || '').trim().toLowerCase();
     const password = req.body.password;
     if (!email || !password) return res.status(400).json({ success: false, message: 'Email and password required' });
+    if (password.length < 6) return res.status(400).json({ success: false, message: 'Password must be at least 6 characters' });
     const existing = await db.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) return res.status(409).json({ success: false, message: 'User already exists' });
     const hashed = await bcrypt.hash(password, 10);
