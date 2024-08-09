@@ -22,7 +22,7 @@ function authenticateToken(req, res, next) {
 }
 
 function generateToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
 }
 
 module.exports = { authenticateToken, generateToken, JWT_SECRET };
