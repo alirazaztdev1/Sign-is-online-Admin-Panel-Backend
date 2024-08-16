@@ -3,7 +3,7 @@ const multer = require('multer');
 const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 
 router.post('/s3', authenticateToken, upload.single('file'), async (req, res) => {
   try {
