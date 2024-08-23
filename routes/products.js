@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM products ORDER BY id');
-    res.json({ products: result.rows });
+    const result = await db.query('SELECT * FROM products ORDER BY id DESC');
+    res.json({ success: true, products: result.rows });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
