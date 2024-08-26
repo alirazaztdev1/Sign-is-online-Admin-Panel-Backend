@@ -14,7 +14,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const result = await db.query('SELECT * FROM products WHERE id = $1', [req.params.id]);
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) return res.status(400).json({ success: false, message: 'Invalid product id' });
+    const result = await db.query('SELECT * FROM products WHERE id = $1', [id]);
     if (result.rows.length === 0) return res.status(404).json({ message: 'Product not found' });
     res.json({ product: result.rows[0] });
   } catch (err) {
