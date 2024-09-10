@@ -40,7 +40,7 @@ router.get('/terms-conditions', async (req, res) => {
   }
 });
 
-router.put('/update/:id', async (req, res) => {
+router.put('/update/:id', authenticateToken, async (req, res) => {
   try {
     const { value } = req.body;
     const result = await db.query('UPDATE settings SET value = $1, updatedat = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *', [value, req.params.id]);
