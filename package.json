@@ -12,6 +12,7 @@
     "seed:scripts": "node seed-scripts.js",
     "seed:devices": "node seed-devices.js",
     "seed:history": "node seed-history.js",
+    "seed:all": "node seed.js && node seed-platforms.js && node seed-products.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
