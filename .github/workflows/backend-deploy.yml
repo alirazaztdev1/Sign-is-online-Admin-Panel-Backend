@@ -43,7 +43,7 @@ jobs:
       - name: Health check
         run: |
           sleep 5
-          curl --fail http://localhost:5000 || (sudo journalctl -u backend --no-pager -n 50 && exit 1)
+          curl --fail http://localhost:5000/health || (sudo journalctl -u backend --no-pager -n 50 && exit 1)
 
       - name: Diagnose admin API
         run: |
