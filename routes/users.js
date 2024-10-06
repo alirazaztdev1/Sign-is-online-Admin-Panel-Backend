@@ -7,8 +7,10 @@ const router = express.Router();
 
 router.get('/all-users', authenticateToken, async (req, res) => {
   try {
-    const { page = 1, limit = 10, keyword = '' } = req.query;
-    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
+    const keyword = req.query.keyword || '';
+    const offset = (page - 1) * limit;
     let countSQL = 'SELECT COUNT(*) as cnt FROM users';
     let dataSQL = 'SELECT UserID as id, FullName as name, Email as email, Phone as phone, Role as role, CreatedAt as createdat FROM users';
     const countParams = [];
