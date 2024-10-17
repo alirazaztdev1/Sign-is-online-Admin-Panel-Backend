@@ -52,6 +52,7 @@ router.post('/', authenticateToken, async (req, res) => {
 router.put('/:id', authenticateToken, async (req, res) => {
   try {
     const { question, answer, isActive } = req.body;
+    if (question !== undefined && !String(question).trim()) return res.status(400).json({ success: false, message: 'Question cannot be empty' });
     const result = await db.query('UPDATE faqs SET question = COALESCE($1, question), answer = COALESCE($2, answer), isactive = COALESCE($3, isactive), updatedat = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *', [question, answer, isActive, req.params.id]);
     if (result.rows.length === 0) return res.status(404).json({ success: false, message: 'FAQ not found' });
     res.json({ success: true, data: result.rows[0] });
