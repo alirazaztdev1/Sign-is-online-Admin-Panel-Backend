@@ -14,6 +14,8 @@ async function initializeSchema() {
       updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
+    CREATE INDEX IF NOT EXISTS users_email_idx ON users (email);
+
     CREATE TABLE IF NOT EXISTS customers (
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
