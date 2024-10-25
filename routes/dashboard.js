@@ -17,6 +17,7 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
         totalCustomers: parseInt(totalCustomers.rows[0].count),
         totalBookings: parseInt(totalBookings.rows[0].count),
         totalTransactions: parseInt(totalTransactions.rows[0].count),
+        generatedAt: new Date().toISOString(),
       }
     });
   } catch (err) {
