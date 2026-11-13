@@ -4,7 +4,7 @@
   "description": "Admin API for the Sign is Online dashboard",
   "main": "app.js",
   "scripts": {
-    "start": "node init && node app.js",
+    "start": "node app.js",
     "seed": "node seed.js",
     "seed:platforms": "node seed-platforms.js",
     "seed:products": "node seed-products.js",
